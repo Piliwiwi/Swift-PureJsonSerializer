@@ -64,7 +64,7 @@ internal final class JsonDeserializer: Parser {
         skipWhitespaces()
         
         guard cur == end else {
-            throw ExtraTokenError("extra tokens found", self) as! Error
+            throw ExtraTokenError("extra tokens found", self) as Error
         }
         
         return json
@@ -73,7 +73,7 @@ internal final class JsonDeserializer: Parser {
     fileprivate func deserializeNextValue() throws -> Json {
         skipWhitespaces()
         guard cur != end else {
-            throw InsufficientTokenError("unexpected end of tokens", self) as! Error
+            throw InsufficientTokenError("unexpected end of tokens", self) as Error
         }
         
         switch currentChar {
@@ -92,13 +92,13 @@ internal final class JsonDeserializer: Parser {
         case Char(ascii: "["):
             return try parseArray()
         case let c:
-            throw UnexpectedTokenError("unexpected token: \(c)", self) as! Error
+            throw UnexpectedTokenError("unexpected token: \(c)", self) as Error
         }
     }
     
     fileprivate func parseSymbol(_ target: StaticString, _ iftrue:  @autoclosure () -> Json) throws -> Json {
         guard expect(target) else {
-            throw UnexpectedTokenError("expected \"\(target)\" but \(currentSymbol)", self) as! Error
+            throw UnexpectedTokenError("expected \"\(target)\" but \(currentSymbol)", self) as Error
         }
         
         return iftrue()
@@ -116,11 +116,11 @@ internal final class JsonDeserializer: Parser {
                 advance()
                 
                 guard cur != end else {
-                    throw InvalidStringError("unexpected end of a string literal", self) as! Error
+                    throw InvalidStringError("unexpected end of a string literal", self) as Error
                 }
                 
                 guard let escapedChar = parseEscapedChar() else {
-                    throw InvalidStringError("invalid escape sequence", self) as! Error
+                    throw InvalidStringError("invalid escape sequence", self) as Error
                 }
                 
                 String(escapedChar).utf8.forEach {
@@ -134,7 +134,7 @@ internal final class JsonDeserializer: Parser {
         }
         
         guard expect("\"") else {
-            throw InvalidStringError("missing double quote", self) as! Error
+            throw InvalidStringError("missing double quote", self) as Error
         }
         
         buffer.append(0) // trailing nul
@@ -193,7 +193,7 @@ internal final class JsonDeserializer: Parser {
                 advance()
             }
         default:
-            throw InvalidNumberError("invalid token in number", self) as! Error
+            throw InvalidNumberError("invalid token in number", self) as Error
         }
         
         var fraction: Double = 0.0
@@ -210,7 +210,7 @@ internal final class JsonDeserializer: Parser {
             }
             
             guard fractionLength != 0 else {
-                throw InvalidNumberError("insufficient fraction part in number", self) as! Error
+                throw InvalidNumberError("insufficient fraction part in number", self) as Error
             }
         }
         
@@ -233,7 +233,7 @@ internal final class JsonDeserializer: Parser {
             }
             
             guard exponentLength != 0 else {
-                throw InvalidNumberError("insufficient exponent part in number", self) as! Error
+                throw InvalidNumberError("insufficient exponent part in number", self) as Error
             }
             
             exponent *= expSign
@@ -258,12 +258,12 @@ internal final class JsonDeserializer: Parser {
         
         while cur != end && !expect("}") {
             guard case let .StringValue(key) = try deserializeNextValue() else {
-                throw NonStringKeyError("unexpected value for object key", self) as! Error
+                throw NonStringKeyError("unexpected value for object key", self) as Error
             }
             
             skipWhitespaces()
             guard expect(":") else {
-                throw UnexpectedTokenError("missing colon (:)", self) as! Error
+                throw UnexpectedTokenError("missing colon (:)", self) as Error
             }
             skipWhitespaces()
             
@@ -277,7 +277,7 @@ internal final class JsonDeserializer: Parser {
             }
             
             guard expect(",") else {
-                throw UnexpectedTokenError("missing comma (,)", self) as! Error
+                throw UnexpectedTokenError("missing comma (,)", self) as Error
             }
         }
         
@@ -302,7 +302,7 @@ internal final class JsonDeserializer: Parser {
             } else if expect("]") {
                 break LOOP
             } else {
-                throw UnexpectedTokenError("missing comma (,) (token: \(currentSymbol))", self) as! Error
+                throw UnexpectedTokenError("missing comma (,) (token: \(currentSymbol))", self) as Error
             }
             
         }
@@ -377,7 +377,7 @@ internal final class JsonDeserializer: Parser {
 
 extension JsonDeserializer.Char {
     var isWhitespace: Bool {
-        let type = type(of: self)
+        let type = Swift.type(of: self)
         switch self {
         case type.init(ascii: " "), type.init(ascii: "\t"), type.init(ascii: "\r"), type.init(ascii: "\n"):
             return true
@@ -388,8 +388,8 @@ extension JsonDeserializer.Char {
 }
 
 extension Collection {
-    func prefixUntil(_ stopCondition: (Generator.Element) -> Bool) -> Array<Generator.Element> {
-        var prefix: [Generator.Element] = []
+    func prefixUntil(_ stopCondition: (Iterator.Element) -> Bool) -> Array<Iterator.Element> {
+        var prefix: [Iterator.Element] = []
         for element in self {
             guard !stopCondition(element) else { return prefix }
             prefix.append(element)

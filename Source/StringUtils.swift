@@ -60,7 +60,7 @@ let digitMapping: [UnicodeScalar:Int] = [
 
 extension String {
     public var escapedJsonString: String {
-        let mapped = characters
+        let mapped = self
             .map { escapeMapping[$0] ?? String($0) }
             .joined(separator: "")
         return "\"" + mapped + "\""
