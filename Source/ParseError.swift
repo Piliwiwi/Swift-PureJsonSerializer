@@ -12,7 +12,7 @@ protocol Parser {
 }
 
 open class ParseError: Error, CustomStringConvertible {
-    open let reason: String
+    public let reason: String
     let parser: Parser
 
     open var lineNumber: Int {
